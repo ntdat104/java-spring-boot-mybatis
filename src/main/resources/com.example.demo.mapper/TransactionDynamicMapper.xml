@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TransactionDynamicMapper">
+    <resultMap id="transactionDynamicResultMap" type="TransactionDto">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="amount" column="amount"/>
+        <result property="currency" column="currency"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="transactionColumns">
+        id,
+        user_id,
+        amount,
+        currency,
+        status,
+        type,
+        created_at,
+        updated_at
+    </sql>
+
+    <sql id="transactionWhereClause">
+        <where>
+            <foreach collection="rules" item="rule">
+                <choose>
+                    <when test="rule.operator.equals('=')">AND ${rule.field} = #{rule.value}</when>
+                    <when test="rule.operator.equals('!=')">AND ${rule.field} != #{rule.value}</when>
+                    <when test="rule.operator.equals('>')">AND ${rule.field} > #{rule.value}</when>
+                    <when test="rule.operator.equals('>=')">AND ${rule.field} >= #{rule.value}</when>
+                    <when test="rule.operator.equals('&lt;')">AND ${rule.field} <![CDATA[<]]> #{rule.value}</when>
+                    <when test="rule.operator.equals('&lt;=')">AND ${rule.field} <![CDATA[<=]]> #{rule.value}</when>
+                    <when test="rule.operator.equals('is_null')">AND ${rule.field} IS NULL</when>
+                    <when test="rule.operator.equals('not_null')">AND ${rule.field} IS NOT NULL</when>
+                    <when test="rule.operator.equals('in')">
+                        AND ${rule.field} IN
+                        <foreach item="item" collection="rule.value" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </when>
+                    <when test="rule.operator.equals('not_in')">
+                        AND ${rule.field} NOT IN
+                        <foreach item="item" collection="rule.value" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </when>
+                    <when test="rule.operator.equals('empty')">AND (${rule.field} = '' OR ${rule.field} IS NULL)</when>
+                    <when test="rule.operator.equals('not_empty')">AND ${rule.field} != '' AND ${rule.field} IS NOT NULL</when>
+                    <when test="rule.operator.equals('eq_or_null')">AND (${rule.field} = #{rule.value} OR ${rule.field} IS NULL)</when>
+                    <when test="rule.operator.equals('like')">AND ${rule.field} LIKE CONCAT('%', #{rule.value}, '%')</when>
+                </choose>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="searchTransactionsDynamic" resultMap="transactionDynamicResultMap">
+        SELECT
+        <include refid="transactionColumns"/>
+        FROM transactions
+        <include refid="transactionWhereClause"/>
+        ORDER BY ${sortField} ${sortDirection}
+        LIMIT #{size} OFFSET #{page} * #{size}
+    </select>
+
+    <select id="countTransactionsDynamic" resultType="long">
+        SELECT COUNT(*) FROM transactions
+        <include refid="transactionWhereClause"/>
+    </select>
+</mapper>

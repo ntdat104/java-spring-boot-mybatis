@@ -3,7 +3,6 @@ package com.example.demo.mapper;
 import com.example.demo.dto.TransactionDto;
 import com.example.demo.dto.TransactionSearchRequest;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

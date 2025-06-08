@@ -1,14 +1,12 @@
-package com.example.demo.dto;
+package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionDto {
+public class Transaction {
     private String id;
     private String userId;
     private BigDecimal amount;
@@ -17,10 +15,4 @@ public class TransactionDto {
     private String type;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // Detail fields
-    private String description;
-    private String category;
-    private String location;
-    private String referenceNumber;
 }
