@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TransactionWithDetailMapper">
+    <resultMap id="transactionWithDetailResultMap" type="TransactionDto">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="amount" column="amount"/>
+        <result property="currency" column="currency"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+
+        <!-- Detail fields -->
+        <result property="description" column="description"/>
+        <result property="category" column="category"/>
+        <result property="location" column="location"/>
+        <result property="referenceNumber" column="reference_number"/>
+    </resultMap>
+
+    <sql id="transactionColumns">
+        t.id,
+        t.user_id,
+        t.amount,
+        t.currency,
+        t.status,
+        t.type,
+        t.created_at,
+        t.updated_at
+    </sql>
+
+    <sql id="detailColumns">
+        td.description,
+        td.category,
+        td.location,
+        td.reference_number
+    </sql>
+
+    <sql id="transactionWhereClause">
+        <where>
+            <!-- Transaction filters -->
+            <if test="ids != null and !ids.isEmpty()">
+                AND t.id IN
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="userIds != null and !userIds.isEmpty()">
+                AND t.user_id IN
+                <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+            <if test="minAmount != null">
+                AND t.amount >= #{minAmount}
+            </if>
+            <if test="maxAmount != null">
+                AND t.amount &lt;= #{maxAmount}
+            </if>
+            <if test="currencies != null and !currencies.isEmpty()">
+                AND t.currency IN
+                <foreach item="currency" collection="currencies" open="(" separator="," close=")">
+                    #{currency}
+                </foreach>
+            </if>
+            <if test="statuses != null and !statuses.isEmpty()">
+                AND t.status IN
+                <foreach item="status" collection="statuses" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="types != null and !types.isEmpty()">
+                AND t.type IN
+                <foreach item="type" collection="types" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+
+            <!-- Detail filters -->
+            <if test="categories != null and !categories.isEmpty()">
+                AND td.category IN
+                <foreach item="category" collection="categories" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+            </if>
+            <if test="location != null">
+                AND td.location LIKE CONCAT('%', #{location}, '%')
+            </if>
+            <if test="referenceNumber != null">
+                AND td.reference_number = #{referenceNumber}
+            </if>
+            <if test="description != null">
+                AND td.description LIKE CONCAT('%', #{description}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="searchTransactionsWithDetails" resultMap="transactionWithDetailResultMap">
+        SELECT
+        <include refid="transactionColumns"/>,
+        <include refid="detailColumns"/>
+        FROM transactions t
+        INNER JOIN transaction_details td ON t.id = td.transaction_id
+        <include refid="transactionWhereClause"/>
+        ORDER BY ${safeSortBy} ${safeSortOrder}
+        LIMIT #{size} OFFSET #{page} * #{size}
+    </select>
+
+    <select id="countTransactionsWithDetails" resultType="long">
+        SELECT COUNT(DISTINCT t.id)
+        FROM transactions t
+        INNER JOIN transaction_details td ON t.id = td.transaction_id
+        <include refid="transactionWhereClause"/>
+    </select>
+</mapper>

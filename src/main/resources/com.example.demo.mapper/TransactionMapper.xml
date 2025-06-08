@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TransactionMapper">
+    <resultMap id="transactionResultMap" type="TransactionDto">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="amount" column="amount"/>
+        <result property="currency" column="currency"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- Base column list for reuse -->
+    <sql id="transactionColumns">
+        id,
+        user_id,
+        amount,
+        currency,
+        status,
+        type,
+        created_at,
+        updated_at
+    </sql>
+
+    <!-- Common where clause conditions -->
+    <sql id="transactionWhereClause">
+        <where>
+            <if test="ids != null and !ids.isEmpty()">
+                AND id IN
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="userIds != null and !userIds.isEmpty()">
+                AND user_id IN
+                <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+            <if test="minAmount != null">
+                AND amount >= #{minAmount}
+            </if>
+            <if test="maxAmount != null">
+                AND amount &lt;= #{maxAmount}
+            </if>
+            <if test="currencies != null and !currencies.isEmpty()">
+                AND currency IN
+                <foreach item="currency" collection="currencies" open="(" separator="," close=")">
+                    #{currency}
+                </foreach>
+            </if>
+            <if test="statuses != null and !statuses.isEmpty()">
+                AND status IN
+                <foreach item="status" collection="statuses" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="types != null and !types.isEmpty()">
+                AND type IN
+                <foreach item="type" collection="types" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <select id="searchTransactions" resultMap="transactionResultMap">
+        SELECT
+        <include refid="transactionColumns"/>
+        FROM transactions
+        <include refid="transactionWhereClause"/>
+        ORDER BY ${safeSortBy} ${safeSortOrder}
+        LIMIT #{size} OFFSET #{page} * #{size}
+    </select>
+
+    <select id="countTransactions" resultType="long">
+        SELECT COUNT(*) FROM transactions
+        <include refid="transactionWhereClause"/>
+    </select>
+</mapper>
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.example.demo.mapper.TransactionMapper">-->
+
+<!--<resultMap id="transactionResultMap" type="TransactionDto">-->
+<!--    <id property="id" column="id"/>-->
+<!--    <result property="userId" column="user_id"/>-->
+<!--    <result property="amount" column="amount"/>-->
+<!--    <result property="currency" column="currency"/>-->
+<!--    <result property="status" column="status"/>-->
+<!--    <result property="type" column="type"/>-->
+<!--    <result property="createdAt" column="created_at"/>-->
+<!--    <result property="updatedAt" column="updated_at"/>-->
+<!--</resultMap>-->
+
+<!--<select id="searchTransactions" resultMap="transactionResultMap">-->
+<!--    SELECT * FROM transactions-->
+<!--    <where>-->
+<!--        <if test="ids != null and !ids.isEmpty()">-->
+<!--            AND id IN-->
+<!--            <foreach item="id" collection="ids" open="(" separator="," close=")">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="userIds != null and !userIds.isEmpty()">-->
+<!--            AND user_id IN-->
+<!--            <foreach item="userId" collection="userIds" open="(" separator="," close=")">-->
+<!--                #{userId}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="minAmount != null">-->
+<!--            AND amount >= #{minAmount}-->
+<!--        </if>-->
+<!--        <if test="maxAmount != null">-->
+<!--            AND amount &lt;= #{maxAmount}-->
+<!--        </if>-->
+<!--        <if test="currencies != null and !currencies.isEmpty()">-->
+<!--            AND currency IN-->
+<!--            <foreach item="currency" collection="currencies" open="(" separator="," close=")">-->
+<!--                #{currency}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="statuses != null and !statuses.isEmpty()">-->
+<!--            AND status IN-->
+<!--            <foreach item="status" collection="statuses" open="(" separator="," close=")">-->
+<!--                #{status}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="types != null and !types.isEmpty()">-->
+<!--            AND type IN-->
+<!--            <foreach item="type" collection="types" open="(" separator="," close=")">-->
+<!--                #{type}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--    </where>-->
+<!--    ORDER BY ${safeSortBy} ${safeSortOrder}-->
+<!--    LIMIT #{size} OFFSET #{page} * #{size}-->
+<!--</select>-->
+
+<!--<select id="countTransactions" resultType="long">-->
+<!--    SELECT COUNT(*) FROM transactions-->
+<!--    <where>-->
+<!--        <if test="ids != null and !ids.isEmpty()">-->
+<!--            AND id IN-->
+<!--            <foreach item="id" collection="ids" open="(" separator="," close=")">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="userIds != null and !userIds.isEmpty()">-->
+<!--            AND user_id IN-->
+<!--            <foreach item="userId" collection="userIds" open="(" separator="," close=")">-->
+<!--                #{userId}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="minAmount != null">-->
+<!--            AND amount >= #{minAmount}-->
+<!--        </if>-->
+<!--        <if test="maxAmount != null">-->
+<!--            AND amount &lt;= #{maxAmount}-->
+<!--        </if>-->
+<!--        <if test="currencies != null and !currencies.isEmpty()">-->
+<!--            AND currency IN-->
+<!--            <foreach item="currency" collection="currencies" open="(" separator="," close=")">-->
+<!--                #{currency}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="statuses != null and !statuses.isEmpty()">-->
+<!--            AND status IN-->
+<!--            <foreach item="status" collection="statuses" open="(" separator="," close=")">-->
+<!--                #{status}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        <if test="types != null and !types.isEmpty()">-->
+<!--            AND type IN-->
+<!--            <foreach item="type" collection="types" open="(" separator="," close=")">-->
+<!--                #{type}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--    </where>-->
+<!--</select>-->
+<!--</mapper>-->
