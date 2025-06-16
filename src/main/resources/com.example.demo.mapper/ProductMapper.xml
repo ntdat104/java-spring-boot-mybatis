@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.ProductMapper">
+
+    <insert id="insertProduct" parameterType="com.example.demo.entity.Product">
+        INSERT INTO products (id, name, description, price)
+        VALUES (#{id}, #{name}, #{description}, #{price})
+    </insert>
+
+    <select id="findAllProducts" resultType="com.example.demo.entity.Product">
+        SELECT * FROM products
+    </select>
+
+    <select id="findById" parameterType="String" resultType="com.example.demo.entity.Product">
+        SELECT * FROM products WHERE id = #{id}
+    </select>
+
+</mapper>

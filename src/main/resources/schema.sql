@@ -19,5 +19,12 @@ CREATE TABLE IF NOT EXISTS transaction_details (
     FOREIGN KEY (transaction_id) REFERENCES transactions(id)
 );
 
+CREATE TABLE IF NOT EXISTS products (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    price DOUBLE
+);
+
 CREATE INDEX idx_transaction_details_transaction_id ON transaction_details(transaction_id);
 CREATE INDEX idx_transaction_details_category ON transaction_details(category);
