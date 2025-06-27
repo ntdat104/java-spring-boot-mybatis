@@ -41,3 +41,21 @@ INSERT INTO transaction_details (id, transaction_id, description, category, loca
 ('detail_018', 'txn_018', 'Gym membership', 'HEALTH', 'Online', 'REF33445'),
 ('detail_019', 'txn_019', 'Failed rent transfer', 'HOUSING', 'Manchester', 'REF66778'),
 ('detail_020', 'txn_020', 'Pharmacy purchase', 'HEALTH', 'Birmingham', 'REF99001');
+
+-- Users created on 2025-06-27
+INSERT INTO users (id, full_name, created_at) VALUES
+('user-a1', 'Alice Johnson',  '2025-06-27 10:00:00'),
+('user-a2', 'Alan Walker',    '2025-06-27 10:00:00'),
+('user-a3', 'Anna Bell',      '2025-06-27 09:50:00'),
+
+-- Users created on 2025-06-26
+('user-b1', 'Brian O''Conner','2025-06-26 15:30:00'),
+('user-b2', 'Brenda Stone',   '2025-06-26 15:00:00'),
+
+-- Users created on 2025-06-25
+('user-c1', 'Charlie Hunt',   '2025-06-25 08:00:00'),
+('user-c2', 'Catherine Zeta', '2025-06-25 07:45:00'),
+
+-- Users created on 2025-06-24
+('user-d1', 'David Nolan',    '2025-06-24 18:10:00'),
+('user-d2', 'Dana White',     '2025-06-24 17:55:00');

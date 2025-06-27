@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"><!-- UserMapper.xml -->
+<mapper namespace="com.example.demo.domain.mapper.UserMapper">
+    <resultMap id="userResultMap" type="User">
+        <id property="id" column="id" />
+        <result column="full_name" property="fullName" />
+        <result column="created_at" property="createdAt" />
+    </resultMap>
+
+    <select id="selectUsersPage" resultMap="userResultMap">
+        SELECT id, full_name, created_at
+        FROM users
+        <where>
+            <!-- Only apply cursor if provided -->
+            <if test="createdAt != null and id != null">
+                (created_at &lt; #{createdAt}
+                OR (created_at = #{createdAt} AND id &lt; #{id}))
+            </if>
+        </where>
+        ORDER BY created_at DESC, id DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

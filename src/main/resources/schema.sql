@@ -1,3 +1,9 @@
+CREATE TABLE users (
+    id VARCHAR PRIMARY KEY,
+    full_name VARCHAR,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36) NOT NULL,
@@ -28,3 +34,5 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE INDEX idx_transaction_details_transaction_id ON transaction_details(transaction_id);
 CREATE INDEX idx_transaction_details_category ON transaction_details(category);
+
+CREATE INDEX idx_users_created_at ON users(created_at);
