@@ -4,6 +4,7 @@ import com.example.demo.application.record.Cursor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class CursorUtil {
     }
 
     public Cursor decode(String token) throws IOException {
-        if (token == null || token.isBlank()) {
+        if (StringUtils.isBlank(token)) {
             // Use "max" defaults to get first page
             Cursor cursor = new Cursor();
             cursor.setId("\uFFFF");

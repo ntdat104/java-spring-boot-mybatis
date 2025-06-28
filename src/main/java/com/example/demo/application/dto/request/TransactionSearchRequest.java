@@ -3,6 +3,8 @@ package com.example.demo.application.dto.request;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -30,10 +32,10 @@ public class TransactionSearchRequest {
     // Helper method to get safe sort column
     public String getSafeSortBy() {
         // Whitelist of allowed sort columns
-        Set<String> allowedColumns = Set.of(
+        Set<String> allowedColumns = new HashSet<>(Arrays.asList(
                 "id", "user_id", "amount", "currency", "status", "type",
                 "created_at", "updated_at", "category", "location"
-        );
+        ));
         return allowedColumns.contains(sortBy) ? sortBy : "created_at";
     }
 

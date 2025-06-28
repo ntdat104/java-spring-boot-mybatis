@@ -4,9 +4,11 @@ import com.example.demo.application.dto.request.SearchDataRequest;
 import com.example.demo.application.dto.request.SearchRulesRequest;
 import com.example.demo.application.enums.SearchOperationEnum;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TransactionQueryBuilderUtil {
     public static Map<String, Object> buildQueryParams(SearchDataRequest request) {
@@ -15,7 +17,7 @@ public class TransactionQueryBuilderUtil {
         // Process rules
         List<SearchRulesRequest> processedRules = request.getRules().stream()
                 .map(TransactionQueryBuilderUtil::validateRule)
-                .toList();
+                .collect(Collectors.toList());
 
         // Add processed parameters
         params.put("rules", processedRules);
@@ -33,7 +35,7 @@ public class TransactionQueryBuilderUtil {
         }
 
         // Validate operator
-        var searchOperator = SearchOperationEnum.getByOperator(rule.getOperator());
+        SearchOperationEnum searchOperator = SearchOperationEnum.getByOperator(rule.getOperator());
         if (searchOperator == null) {
             throw new IllegalArgumentException("Invalid search operator: " + rule.getOperator());
         }
@@ -41,8 +43,7 @@ public class TransactionQueryBuilderUtil {
     }
 
     private static boolean isValidField(String field) {
-        // Define whitelist of allowed fields
-        List<String> allowedFields = List.of(
+        List<String> allowedFields = Arrays.asList(
                 "id", "user_id", "amount", "currency", "status", "type",
                 "created_at", "updated_at"
         );
@@ -50,7 +51,7 @@ public class TransactionQueryBuilderUtil {
     }
 
     private static String validateSortField(String sortField) {
-        List<String> allowedSortFields = List.of(
+        List<String> allowedSortFields = Arrays.asList(
                 "id", "user_id", "amount", "created_at",
                 "updated_at"
         );

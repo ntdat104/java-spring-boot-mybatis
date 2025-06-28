@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,10 @@ public class UserController {
             nextCursor = cursorUtil.encode(newCursor);
         }
 
-        return ResponseEntity.ok(Map.of(
-                "users", users,
-                "nextCursor", nextCursor
-        ));
+        Map<String, Object> response = new HashMap<>();
+        response.put("users", users);
+        response.put("nextCursor", nextCursor);
+
+        return ResponseEntity.ok(response);
     }
 }

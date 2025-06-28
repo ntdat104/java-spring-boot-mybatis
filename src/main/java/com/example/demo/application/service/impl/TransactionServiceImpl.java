@@ -5,9 +5,11 @@ import com.example.demo.application.dto.request.TransactionSearchRequest;
 import com.example.demo.application.dto.response.TransactionSearchResponse;
 import com.example.demo.application.service.TransactionAsyncService;
 import com.example.demo.application.service.TransactionService;
+import com.example.demo.domain.model.Transaction;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -19,8 +21,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionSearchResponse searchTransactions(TransactionSearchRequest request) {
         try {
-            var transactionsFuture =  transactionAsyncService.searchAsyncTransactions(request);
-            var countFuture = transactionAsyncService.countAsyncTransactions(request);
+            CompletableFuture<List<Transaction>> transactionsFuture =  transactionAsyncService.searchAsyncTransactions(request);
+            CompletableFuture<Long> countFuture = transactionAsyncService.countAsyncTransactions(request);
             CompletableFuture.allOf(transactionsFuture, countFuture).join();
 
             TransactionSearchResponse response = new TransactionSearchResponse();
@@ -35,8 +37,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionSearchResponse searchTransactionsWithDetail(TransactionSearchRequest request) {
         try {
-            var transactionsFuture =  transactionAsyncService.searchAsyncTransactionsWithDetail(request);
-            var countFuture = transactionAsyncService.countAsyncTransactionsWithDetail(request);
+            CompletableFuture<List<Transaction>> transactionsFuture =  transactionAsyncService.searchAsyncTransactionsWithDetail(request);
+            CompletableFuture<Long> countFuture = transactionAsyncService.countAsyncTransactionsWithDetail(request);
             CompletableFuture.allOf(transactionsFuture, countFuture).join();
 
             TransactionSearchResponse response = new TransactionSearchResponse();
@@ -51,8 +53,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionSearchResponse searchTransactionsDynamic(SearchDataRequest request) {
         try {
-            var transactionsFuture =  transactionAsyncService.searchAsyncTransactionsDynamic(request);
-            var countFuture = transactionAsyncService.countAsyncTransactionsDynamic(request);
+            CompletableFuture<List<Transaction>> transactionsFuture =  transactionAsyncService.searchAsyncTransactionsDynamic(request);
+            CompletableFuture<Long> countFuture = transactionAsyncService.countAsyncTransactionsDynamic(request);
             CompletableFuture.allOf(transactionsFuture, countFuture).join();
 
             TransactionSearchResponse response = new TransactionSearchResponse();
