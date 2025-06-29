@@ -29,8 +29,7 @@ public class SimplizeServiceImpl implements SimplizeService {
     private String apiKey;
     private String apiSecret;
 
-    @Value("${simplize.base-url:https://api2.simplize.vn}")
-    private String baseUrl;
+    private final String baseUrl = "https://api2.simplize.vn";
 
     public SimplizeServiceImpl(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
